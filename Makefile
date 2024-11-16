@@ -4,7 +4,7 @@ CC= cc
 CFLAGS= -Ofast -g
 
 SRC= $(addprefix Sources/, $(SOURCES))
-SOURCES= main.c
+SOURCES= main.c loading.c loop.c frame.c
 		
 OBJ_DIR= objects
 OBJ= $(addprefix $(OBJ_DIR)/, $(SRC:Sources/%.c=%.o)) \

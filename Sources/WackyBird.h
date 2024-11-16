@@ -19,16 +19,27 @@
 # include <limits.h>
 
 # define TRANSPARENT 16777215
-# define SIZE 64
-# define X_RES 1900
-# define Y_RES 1060
-# define H_SPEED 0.05
-# define JUMP_STR 100 
-# define M_PI 3.14159265358979323846
+# define X_RES 540
+# define Y_RES 960
+
+# define B1_SPEED_RATIO 0.15
+# define B2_SPEED_RATIO 0.45
+# define B3_SPEED_RATIO 0.80
+
+# define JUMP_STR 300
+# define ACCELERATION 600
+
+# define OBS_START_SPEED 60
+# define OBS_AC 20000
+# define OBS_GAP 200
+# define OBS_FREQ 5
+# define OBS_INC_RATE 30
+# define MAX_OBS 10
+
 # define FRAME_RATE 60
 # define ASSET_NUMBER 5
 # define IMG_NUMBER 4
-# define BACKGROUND_LENGHT 5
+# define BACKGROUND_LENGHT 4
 
 typedef enum assets
 {
@@ -68,16 +79,17 @@ typedef struct s_bird
 	t_image		img;
 	float		y;
 	float		v;
-	float 		a;
 }	t_bird;
 
 typedef struct s_obstacles
 {
-	float				x;
-	double				x_in_texture;
-	double				y_stepper;
-	double				x_coordinate;
-	double				height;
+	float			x;
+	int 			active;
+	float			gap_start;
+	float			bottom_y;
+	float			bottom_h;
+	float			top_y;
+	float			top_h;
 }	t_obstacles;
 
 typedef struct s_settings
@@ -95,6 +107,9 @@ typedef struct s_layout
 	float b2p;
 	float b3s;
 	float b3p;
+	long				next_obs_inc;
+	float				obs_s;
+	int					obs_n;
 }	t_layout;
 
 typedef struct s_game
@@ -105,11 +120,24 @@ typedef struct s_game
 	t_image				*img;
 	t_bird				bird;
 	t_obstacles			*obstacles;
-	float				ob_s;
-	float				ob_a;
 	t_settings			settings;
 	t_layout			layout;
 	struct timeval		time;
 }	t_game;
+
+unsigned int get_color(t_image *img, int x, int y);
+void my_mlx_pixel_force(t_image *img, int x, int y, int color);
+void my_mlx_pixel_put(t_image *img, int x, int y, int color);
+void image_to_frame(t_game *game, t_image image, int x, int y);
+
+void load_game(t_game *game);
+
+void bird_movement(t_game *game);
+void generate_random_gap(t_game *game, int obs_n);
+void print_obstacles(t_game *game, int i);
+void obstacles(t_game *game);
+void background(t_game *game);
+
+int	game_close(t_game *game, int exit_code);
 
 #endif
