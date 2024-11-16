@@ -1,70 +1,57 @@
 #include "WackyBird.h"
 
-void bird_movement(t_game *game)
+static void generate_random_gap(t_game *game, int obs_n)
 {
-	game->bird.y += (game->bird.v / (float)FRAME_RATE);
-	game->bird.v += ((float)ACCELERATION / (float)FRAME_RATE);
-	image_to_frame(game, game->bird.img, X_RES / 2, game->bird.y);
-	if (game->bird.y >= Y_RES)
+	game->obstacles[obs_n].gap_start = \
+	rand() % (int)((Y_RES / 16) * 15 - game->phys.obs_gap - (Y_RES / 16) + 1) + (Y_RES / 16);
+}
+
+static void print_obstacles(t_game *game, int i)
+{
+	image_to_frame(game, game->img[TOP_OBS], game->obstacles[i].x, game->obstacles[i].top_y);
+	image_to_frame(game, game->img[BOTTOM_OBS], game->obstacles[i].x, game->obstacles[i].bottom_y);
+}
+
+static void collision_check(t_game *game, int i)
+{
+	if (!(game->obstacles[i].x + game->img[BOTTOM_OBS].w <= game->bird.x || \
+	game->obstacles[i].x >= game->bird.x + game->bird.w || \
+	game->obstacles[i].bottom_y + game->img[BOTTOM_OBS].h <= game->bird.y || \
+	game->obstacles[i].bottom_y >= game->bird.y + game->bird.h) || \
+	!(game->obstacles[i].x + game->img[TOP_OBS].w <= game->bird.x || \
+	game->obstacles[i].x >= game->bird.x + game->bird.w || \
+	game->obstacles[i].top_y + game->img[TOP_OBS].h <= game->bird.y || \
+	game->obstacles[i].top_y >= game->bird.y + game->bird.h))
 	{
-		printf("GAY!\n");
-		game_close(game, 2);
+		game->running = 0 ;
+		game->phys.obs_speed = 0;
+		game->bird.alive = 0;
 	}
 }
 
-void generate_random_gap(t_game *game, int obs_n)
+static void score_check(t_game *game, int i)
 {
-	game->obstacles[obs_n].gap_start = \
-	((float)Y_RES / (float)16) + rand() % (int)(((float)Y_RES / (float)16) * 15 - ((float)Y_RES / (float)16) + 1);
+	if (!game->obstacles[i].collected && game->obstacles[i].x + game->img[TOP_OBS].w / 2 < game->bird.x)
+	{
+		printf("GOOOOOL! %i\n", game->score);
+		game->score++;
+		game->obstacles[i].collected = 1;
+	}
 }
 
-void print_obstacles(t_game *game, int i)
-{
-	for (int y = game->obstacles[i].top_y; y > -game->img[OBSTACLE].h; y -= game->img[OBSTACLE].h)
-		image_to_frame(game, game->img[OBSTACLE], game->obstacles[i].x, y);
-	for (int y = game->obstacles[i].bottom_y; y < Y_RES; y += game->img[OBSTACLE].h)
-		image_to_frame(game, game->img[OBSTACLE], game->obstacles[i].x, y);
-}
-
-void obstacles(t_game *game)
+static void initialize_obstacle(t_game *game)
 {
 	for (int i = 0; i < MAX_OBS; i++)
 	{
-		if (game->obstacles[i].active)
+		if (game->obstacles[i].active == 0)
 		{
-			if (!(game->obstacles[i].x + game->img[OBSTACLE].w <= X_RES / 2 || \
-				game->obstacles[i].x >= X_RES / 2 + game->bird.img.w || \
-				game->obstacles[i].bottom_y + game->obstacles[i].bottom_h <= game->bird.y || \
-				game->obstacles[i].bottom_y >= game->bird.y + game->bird.img.h) || \
-				!(game->obstacles[i].x + game->img[OBSTACLE].w <= X_RES / 2 || \
-				game->obstacles[i].x >= X_RES / 2 + game->bird.img.w || \
-				0 + game->obstacles[i].top_h <= game->bird.y || \
-				0 >= game->bird.y + game->bird.img.h))
-				printf("PANELEIROO!\n");
-			game->obstacles[i].x -= (game->layout.obs_s / (float)FRAME_RATE);
-			if (game->obstacles[i].x + game->img[OBSTACLE].w < 0)
-				game->obstacles[i].active = 0;
-			print_obstacles(game, i);
-		}
-	}
-	game->layout.obs_s += ((float)OBS_AC / (float)FRAME_RATE);
-	gettimeofday(&game->time, NULL);
-	if ((game->time.tv_sec * 1000000 + game->time.tv_usec) > game->layout.next_obs_inc)
-	{
-		game->layout.next_obs_inc = game->time.tv_sec * 1000000 + game->time.tv_usec + 1000000 * OBS_FREQ;
-		for (int i = 0; i < MAX_OBS; i++)
-		{
-			if (game->obstacles[i].active == 0)
-			{
-				game->obstacles[i].active = 1;
-				game->obstacles[i].x = X_RES;
-				generate_random_gap(game, i);
-				game->obstacles[i].top_y = game->obstacles[i].gap_start - game->img[OBSTACLE].h;
-				game->obstacles[i].bottom_y = game->obstacles[i].gap_start + (float)OBS_GAP;
-				game->obstacles[i].top_h = game->obstacles[i].gap_start;
-				game->obstacles[i].bottom_h = (float)Y_RES - game->obstacles[i].bottom_y; 
-				break;
-			}
+			game->obstacles[i].active = 1;
+			game->obstacles[i].collected = 0;
+			game->obstacles[i].x = X_RES + game->img[BOTTOM_OBS].w;
+			generate_random_gap(game, i);
+			game->obstacles[i].top_y = game->obstacles[i].gap_start - game->img[TOP_OBS].h;
+			game->obstacles[i].bottom_y = game->obstacles[i].gap_start + game->phys.obs_gap; 
+			return;
 		}
 	}
 }
@@ -72,15 +59,56 @@ void obstacles(t_game *game)
 void background(t_game *game)
 {
 	image_to_frame(game, game->img[B1], game->layout.b1p, 0);
-	game->layout.b1p -= (game->layout.obs_s / (float)FRAME_RATE) * (float)B1_SPEED_RATIO;
+	game->layout.b1p -= (game->phys.obs_speed / (float)FRAME_RATE) * (float)B1_SPEED_RATIO;
 	if (game->layout.b1p <= -Y_RES)
 		game->layout.b1p = 0;
 	image_to_frame(game, game->img[B2], game->layout.b2p, 0);
-	game->layout.b2p -= (game->layout.obs_s / (float)FRAME_RATE) * (float)B2_SPEED_RATIO;
+	game->layout.b2p -= (game->phys.obs_speed / (float)FRAME_RATE) * (float)B2_SPEED_RATIO;
 	if (game->layout.b2p <= -Y_RES)
 		game->layout.b2p = 0;
 	image_to_frame(game, game->img[B3], game->layout.b3p, 0);
-	game->layout.b3p -= (game->layout.obs_s / (float)FRAME_RATE) * (float)B3_SPEED_RATIO;
+	game->layout.b3p -= (game->phys.obs_speed / (float)FRAME_RATE) * (float)B3_SPEED_RATIO;
 	if (game->layout.b3p <= -Y_RES)
 		game->layout.b3p = 0;
+}
+
+void bird_movement(t_game *game)
+{
+	if (game->bird.alive)
+	{
+		game->bird.y += (game->bird.v / (float)FRAME_RATE);
+		game->bird.v += ((float)game->phys.bird_ac / (float)FRAME_RATE);
+	}
+	if (!game->running && game->bird.alive && game->bird.v > game->phys.bird_jump)
+		game->bird.v = -game->phys.bird_jump;
+	image_to_frame(game, game->bird.img, game->bird.x, game->bird.y);
+	if (game->bird.y >= Y_RES)
+	{
+		game->running = 0;
+		game->phys.obs_speed = 0;
+		game->bird.alive = 0;
+	}
+}
+
+void obstacles(t_game *game)
+{
+	float closest_obs = 0;
+
+	for (int i = 0; i < MAX_OBS; i++)
+	{
+		if (game->obstacles[i].active)
+		{
+			if (game->obstacles[i].x > closest_obs) 
+				closest_obs = game->obstacles[i].x;
+			collision_check(game, i);
+			game->obstacles[i].x -= (game->phys.obs_speed / (float)FRAME_RATE);
+			score_check(game, i);
+			if (game->obstacles[i].x + game->img[OBSTACLE].w < 0)
+				game->obstacles[i].active = 0;
+			print_obstacles(game, i);
+		}
+	}
+	if (X_RES - closest_obs + game->img[BOTTOM_OBS].w > game->phys.obs_distance || !closest_obs)
+		initialize_obstacle(game);
+	game->phys.obs_speed += ((float)game->phys.obs_ac / (float)FRAME_RATE);
 }

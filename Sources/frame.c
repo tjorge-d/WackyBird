@@ -40,12 +40,12 @@ void image_to_frame(t_game *game, t_image image, int x, int y)
 		y_off = -y;
 	if (!scale)
 		scale = 1;
-	for (int i = y_off; i < (image.h * scale) && y + i < Y_RES; i++)
+	for (int i = y_off; i < ((float)image.h * scale) && y + i < Y_RES; i++)
 	{
-		for (int j = x_off; j < (image.w * scale) && x + j < X_RES; j++)
+		for (int j = x_off; j < ((float)image.w * scale) && x + j < X_RES; j++)
 		{
 			my_mlx_pixel_put(&game->img[FRAME], x + j, y + i, \
-			get_color(&image, j / scale, i / scale));
+			get_color(&image, (float)j / scale, (float)i / scale));
 		}
 	}
 }
