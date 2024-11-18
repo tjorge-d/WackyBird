@@ -32,20 +32,17 @@ void image_to_frame(t_game *game, t_image image, int x, int y)
 {
 	int		x_off = 0;
 	int		y_off = 0;
-	int		scale = image.scale;
 
 	if (x < 0)
 		x_off = -x;
 	if (y < 0)
 		y_off = -y;
-	if (!scale)
-		scale = 1;
-	for (int i = y_off; i < ((float)image.h * scale) && y + i < Y_RES; i++)
+	for (int i = y_off; i < ((float)image.h * image.scale) && y + i < Y_RES; i++)
 	{
-		for (int j = x_off; j < ((float)image.w * scale) && x + j < X_RES; j++)
+		for (int j = x_off; j < ((float)image.w * image.scale) && x + j < X_RES; j++)
 		{
 			my_mlx_pixel_put(&game->img[FRAME], x + j, y + i, \
-			get_color(&image, (float)j / scale, (float)i / scale));
+			get_color(&image, (float)j / image.scale, (float)i / image.scale));
 		}
 	}
 }

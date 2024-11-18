@@ -18,23 +18,25 @@
 # include <limits.h>
 
 # define TRANSPARENT 16777215
-# define X_RES 600
 # define Y_RES 800
+# define X_RES 600
 # define FRAME_RATE 60
-# define ASSET_NUMBER 6
+# define ASSET_NUMBER 8
 # define IMG_NUMBER 6
 # define BACKGROUND_LENGHT 10
 
-// BACKGROUND
+// UI
 # define B1_SPEED_RATIO 0.15
 # define B2_SPEED_RATIO 0.45
 # define B3_SPEED_RATIO 0.80
+# define MENU_SPEED 1
 
 // BIRD PROPERTIES
 # define JUMP_STR 0.7
 # define ACCELERATION 2
 # define BIRD_X 0.3
 # define BIRD_SIZE 0.005
+# define BIRD_KNOCKBACK 0.1
 
 // OBSTACLES PROPERTIES
 # define OBS_SPEED 0.1
@@ -53,6 +55,8 @@ typedef enum assets
 	BACKGROUND3,
 	OBSTACLE,
 	OBSTACLE_END,
+	GAMESTART,
+	GAMEOVER,
 	FRAME,
 	B1,
 	B2,
@@ -90,6 +94,7 @@ typedef struct s_bird
 	float		x;
 	float		y;
 	float		v;
+	float		knockback;
 }	t_bird;
 
 typedef struct s_obstacles
@@ -106,7 +111,7 @@ typedef struct s_phys
 {
 	float		bird_ac;
 	float		bird_jump;
-	float		obs_speed;
+	float		game_speed;
 	float		obs_ac;
 	float		obs_distance;
 	float		obs_gap;
@@ -114,12 +119,16 @@ typedef struct s_phys
 
 typedef struct s_layout
 {
-	float b1s;
-	float b1p;
-	float b2s;
-	float b2p;
-	float b3s;
-	float b3p;
+	float	b1s;
+	float	b1p;
+	float	b2s;
+	float	b2p;
+	float	b3s;
+	float	b3p;
+	float	menu_p;
+	float	menu_y;
+	float	menu_x;
+	float	menu_speed;
 }	t_layout;
 
 typedef struct s_game
@@ -144,9 +153,7 @@ void image_to_frame(t_game *game, t_image image, int x, int y);
 
 void load_game(t_game *game);
 
-void background(t_game *game);
-void bird_movement(t_game *game);
-void obstacles(t_game *game);
+int	game_loop(t_game *game);
 
 int	game_close(t_game *game, int exit_code);
 
