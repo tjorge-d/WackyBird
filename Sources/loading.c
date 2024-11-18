@@ -31,7 +31,11 @@ static void set_layout(t_game *game)
 		game->img[GAMEOVER].scale = Y_RES / (float)game->img[GAMEOVER].w;
 		game->img[GAMESTART].scale = Y_RES / (float)game->img[GAMESTART].w;
 	}
-	game->img[BIRD].scale = (float)Y_RES * BIRD_SIZE;
+	for (int i = 0; i <= 9; i++)
+		game->img[i].scale = ((float)Y_RES * (float)SCORE_SIZE) / (float)game->img[i].w;
+	game->layout.score_x = X_RES - (Y_RES * SCORE_POS) - ((float)game->img[ONE].w * game->img[ONE].scale);
+	game->layout.score_y = Y_RES * SCORE_POS;
+	game->img[BIRD].scale = ((float)Y_RES * (float)BIRD_SIZE) / (float)game->img[BIRD].h;
 	game->bird.h = game->img[BIRD].h * game->img[BIRD].scale;
 	game->bird.w = game->img[BIRD].w * game->img[BIRD].scale;
 	game->bird.img = game->img[BIRD];
@@ -66,16 +70,48 @@ static void	set_vars(t_game *game)
 	game->phys.obs_gap = Y_RES * OBS_GAP;
 }
 
-static void	set_asset_paths(t_game *game)
+/*static void	set_asset_paths(t_game *game)
 {
-	game->img[BIRD].path = "./Assets/mini_mario.xpm";
-	game->img[BACKGROUND1].path = "./Assets/bale_wall_1.xpm";
-	game->img[BACKGROUND2].path = "./Assets/mini_mario.xpm";
-	game->img[BACKGROUND3].path = "./Assets/mini_open_door.xpm";
-	game->img[OBSTACLE].path = "./Assets/castle_wall.xpm";
-	game->img[OBSTACLE_END].path = "./Assets/snow_wall.xpm";
+	game->img[BIRD].path = "./Assets/gofas/pigeon-draft.xpm";
+	game->img[BACKGROUND1].path = "./Assets/gofas/background-1.xpm";
+	game->img[BACKGROUND2].path = "./Assets/gofas/background-2.xpm";
+	game->img[BACKGROUND3].path = "./Assets/gofas/sunset-background2.xpm";
+	game->img[OBSTACLE].path = "./Assets/gofas/building-regular.xpm";
+	game->img[OBSTACLE_END].path = "./Assets/gofas/building-regular.xpm";
 	game->img[GAMESTART].path = "./Assets/mini_open_door.xpm";
 	game->img[GAMEOVER].path = "./Assets/milos_wall_1.xpm";
+	game->img[ZERO].path = "./Assets/sigma_wall_1.xpm";
+	game->img[ONE].path = "./Assets/gofas/number1.xpm";
+	game->img[TWO].path = "./Assets/gofas/number2.xpm";
+	game->img[THREE].path = "./Assets/gofas/number3.xpm";
+	game->img[FOUR].path = "./Assets/gofas/number4.xpm";
+	game->img[FIVE].path = "./Assets/gofas/number5.xpm";
+	game->img[SIX].path = "./Assets/gofas/number6.xpm";
+	game->img[SEVEN].path = "./Assets/gofas/number7.xpm";
+	game->img[EIGHT].path = "./Assets/gofas/number8.xpm";
+	game->img[NINE].path = "./Assets/gofas/number9.xpm";
+}*/
+
+static void	set_asset_paths(t_game *game)
+{
+	game->img[BIRD].path = "./Assets/dogo.xpm";
+	game->img[BACKGROUND1].path = "./Assets/back3.xpm";
+	game->img[BACKGROUND2].path = "./Assets/back22.xpm";
+	game->img[BACKGROUND3].path = "./Assets/back.xpm";
+	game->img[OBSTACLE].path = "./Assets/tubo.xpm";
+	game->img[OBSTACLE_END].path = "./Assets/tubofim.xpm";
+	game->img[GAMESTART].path = "./Assets/mini_open_door.xpm";
+	game->img[GAMEOVER].path = "./Assets/milos_wall_1.xpm";
+	game->img[ZERO].path = "./Assets/sigma_wall_1.xpm";
+	game->img[ONE].path = "./Assets/gofas/number1.xpm";
+	game->img[TWO].path = "./Assets/gofas/number2.xpm";
+	game->img[THREE].path = "./Assets/gofas/number3.xpm";
+	game->img[FOUR].path = "./Assets/gofas/number4.xpm";
+	game->img[FIVE].path = "./Assets/gofas/number5.xpm";
+	game->img[SIX].path = "./Assets/gofas/number6.xpm";
+	game->img[SEVEN].path = "./Assets/gofas/number7.xpm";
+	game->img[EIGHT].path = "./Assets/gofas/number8.xpm";
+	game->img[NINE].path = "./Assets/gofas/number9.xpm";
 }
 
 static void multiply_obstacles_pixel(t_game *game, int x, int y)
@@ -134,16 +170,16 @@ static void fill_background(t_game *game, int i)
 	float y = 0;
 	float ratio = (Y_RES / (float)game->img[i].h);
 
-	if (i > 3)
+	if (i > BACKGROUND3)
 		return ;
 	while  (y < Y_RES)
 	{
 		x = 0;
 		while (x < Y_RES)
 		{
-			my_mlx_pixel_force(&game->img[i + ASSET_NUMBER], x, y, \
+			my_mlx_pixel_force(&game->img[i + IMG_NUMBER], x, y, \
 			get_color(&game->img[i], (x / ratio), (y / ratio)));
-			multiply_background_pixel(game, i + ASSET_NUMBER, x, y);
+			multiply_background_pixel(game, i + IMG_NUMBER, x, y);
 			x++;
 		}
 		y++;
@@ -164,7 +200,10 @@ static void create_images(t_game *game)
 				game->img[i].path, &game->img[i].w, &game->img[i].h);
 		}
 		if (!game->img[i].img)
+		{
+			printf("A:%i\n", i);
 			game_close(game, 2);
+		}
 		game->img[i].addr = mlx_get_data_addr(game->img[i].img, \
 			&game->img[i].bpp, &game->img[i].line_length, &game->img[i].endian);
 		game->img[i].created = 1;
@@ -182,7 +221,7 @@ void load_game(t_game *game)
 	game->last_frame = game->time.tv_sec * 1000000 + game->time.tv_usec;
 	game->window = mlx_new_window(game->mlx, X_RES, Y_RES, "Wacky Bird");
 	create_images(game);
-	fill_background(game, 1);
+	fill_background(game, BACKGROUND1);
 	fill_obstacles(game);
 	set_layout(game);
 }

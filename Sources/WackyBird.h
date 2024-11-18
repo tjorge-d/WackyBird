@@ -21,21 +21,23 @@
 # define Y_RES 800
 # define X_RES 600
 # define FRAME_RATE 60
-# define ASSET_NUMBER 8
+# define ASSET_NUMBER 18
 # define IMG_NUMBER 6
 # define BACKGROUND_LENGHT 10
 
 // UI
-# define B1_SPEED_RATIO 0.15
+# define B1_SPEED_RATIO 0.80
 # define B2_SPEED_RATIO 0.45
-# define B3_SPEED_RATIO 0.80
+# define B3_SPEED_RATIO 0.15
 # define MENU_SPEED 1
+# define SCORE_SIZE 0.1
+# define SCORE_POS 0.03
 
 // BIRD PROPERTIES
 # define JUMP_STR 0.7
 # define ACCELERATION 2
 # define BIRD_X 0.3
-# define BIRD_SIZE 0.005
+# define BIRD_SIZE 0.1
 # define BIRD_KNOCKBACK 0.1
 
 // OBSTACLES PROPERTIES
@@ -49,20 +51,30 @@
 
 typedef enum assets
 {
+	ZERO,
+	ONE,
+	TWO,
+	THREE,
+	FOUR,
+	FIVE,
+	SIX,
+	SEVEN,
+	EIGHT,
+	NINE,
 	BIRD,
-	BACKGROUND1,
-	BACKGROUND2,
-	BACKGROUND3,
 	OBSTACLE,
 	OBSTACLE_END,
 	GAMESTART,
 	GAMEOVER,
+	BACKGROUND1,
+	BACKGROUND2,
+	BACKGROUND3,
 	FRAME,
+	TOP_OBS,
+	BOTTOM_OBS,
 	B1,
 	B2,
-	B3,
-	TOP_OBS,
-	BOTTOM_OBS
+	B3
 }	t_assets;
 
 typedef enum type
@@ -129,6 +141,8 @@ typedef struct s_layout
 	float	menu_y;
 	float	menu_x;
 	float	menu_speed;
+	float	score_y;
+	float	score_x;
 }	t_layout;
 
 typedef struct s_game

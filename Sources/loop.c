@@ -76,15 +76,15 @@ static void background(t_game *game)
 		game->layout.b1p -= (game->phys.game_speed / (float)FRAME_RATE) * (float)B1_SPEED_RATIO;
 		game->layout.b2p -= (game->phys.game_speed / (float)FRAME_RATE) * (float)B2_SPEED_RATIO;
 		game->layout.b3p -= (game->phys.game_speed / (float)FRAME_RATE) * (float)B3_SPEED_RATIO;
-	image_to_frame(game, game->img[B1], game->layout.b1p, 0);
-	if (game->layout.b1p <= -Y_RES)
-		game->layout.b1p = 0;
-	image_to_frame(game, game->img[B2], game->layout.b2p, 0);
-	if (game->layout.b2p <= -Y_RES)
-		game->layout.b2p = 0;
 	image_to_frame(game, game->img[B3], game->layout.b3p, 0);
 	if (game->layout.b3p <= -Y_RES)
 		game->layout.b3p = 0;
+	image_to_frame(game, game->img[B2], game->layout.b2p, 0);
+	if (game->layout.b2p <= -Y_RES)
+		game->layout.b2p = 0;
+	image_to_frame(game, game->img[B1], game->layout.b1p, 0);
+	if (game->layout.b1p <= -Y_RES)
+		game->layout.b1p = 0;
 }
 
 static void bird_movement(t_game *game)
@@ -125,6 +125,30 @@ static void obstacles(t_game *game)
 		game->phys.game_speed += ((float)game->phys.obs_ac / (float)FRAME_RATE);
 }
 
+static void print_score(t_game *game, int score)
+{
+	int iterations = 0;
+	while (score > 9)
+	{
+		image_to_frame(game, game->img[score % 10], \
+		game->layout.score_x - (game->img[score % 10].w * game->img[score % 10].scale * iterations), game->layout.score_y);
+		iterations++;
+		score = score / 10;
+	}
+	image_to_frame(game, game->img[score % 10], \
+	game->layout.score_x - (game->img[score % 10].w * game->img[score % 10].scale * iterations), game->layout.score_y);
+}
+
+static void print_ui(t_game *game)
+{
+	if (game->bird.alive && !game->running)
+		print_menu(game, GAMESTART);
+	if (!game->bird.alive && !game->running)
+		print_menu(game, GAMEOVER);
+	if (game->score >= 0)
+		print_score(game, game->score);
+}
+
 int	game_loop(t_game *game)
 {
 	gettimeofday(&game->time, NULL);
@@ -133,10 +157,7 @@ int	game_loop(t_game *game)
 		background(game);
 		bird_movement(game);
 		obstacles(game);
-		if (game->bird.alive && !game->running)
-			print_menu(game, GAMESTART);
-		if (!game->bird.alive && !game->running)
-			print_menu(game, GAMEOVER);
+		print_ui(game);
 		mlx_put_image_to_window(game->mlx, game->window, game->img[FRAME].img, 0, 0);
 		gettimeofday(&game->time, NULL);
 		game->last_frame = game->time.tv_sec * 1000000 \

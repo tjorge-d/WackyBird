@@ -19,6 +19,7 @@ static void game_restart(t_game *game)
 		game->obstacles[i].active = 0;
 	game->score = -1;
 	game->bird.y = Y_RES / 2;
+	game->bird.x = X_RES * BIRD_X;
 	game->bird.v = 0;
 	game->phys.game_speed = Y_RES * OBS_SPEED;
 	game->bird.alive = 1;
@@ -35,11 +36,11 @@ static void game_start(t_game *game)
 
 static int	key_press(int keycode, t_game *game)
 {
-	if (!game->bird.alive && !game->running && keycode == FORE)
+	if (!game->bird.alive && !game->running && !(game->layout.menu_p > game->layout.menu_y) && keycode == FORE)
 		game_restart(game);
-	else if (!game->running && keycode == FORE)
+	else if (!game->running && !(game->layout.menu_p > game->layout.menu_y) && keycode == FORE)
 		game_start(game);
-	else if (keycode == FORE)
+	else if (game->running && keycode == FORE)
 		game->bird.v = -game->phys.bird_jump;
 	else if (keycode == ESC)
 		game_close(game, 2);
