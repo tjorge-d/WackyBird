@@ -35,10 +35,13 @@ static void set_layout(t_game *game)
 		game->img[i].scale = ((float)Y_RES * (float)SCORE_SIZE) / (float)game->img[i].w;
 	game->layout.score_x = X_RES - (Y_RES * SCORE_POS) - ((float)game->img[ONE].w * game->img[ONE].scale);
 	game->layout.score_y = Y_RES * SCORE_POS;
-	game->img[BIRD].scale = ((float)Y_RES * (float)BIRD_SIZE) / (float)game->img[BIRD].h;
-	game->bird.h = game->img[BIRD].h * game->img[BIRD].scale;
-	game->bird.w = game->img[BIRD].w * game->img[BIRD].scale;
-	game->bird.img = game->img[BIRD];
+	game->img[BIRDUP].scale = ((float)Y_RES * (float)BIRD_SIZE) / (float)game->img[BIRDUP].h;
+	game->img[BIRDOWN].scale = ((float)Y_RES * (float)BIRD_SIZE) / (float)game->img[BIRDOWN].h;
+	game->img[BIRDEAD].scale = ((float)Y_RES * (float)BIRD_SIZE) / (float)game->img[BIRDEAD].h;
+	game->bird.h = game->img[BIRDUP].h * game->img[BIRDUP].scale;
+	game->bird.w = game->img[BIRDUP].w * game->img[BIRDUP].scale;
+	game->bird.img = &game->img[BIRDUP];
+	game->bird.img = &game->img[BIRDUP];
 }
 
 static void	set_vars(t_game *game)
@@ -70,48 +73,28 @@ static void	set_vars(t_game *game)
 	game->phys.obs_gap = Y_RES * OBS_GAP;
 }
 
-/*static void	set_asset_paths(t_game *game)
-{
-	game->img[BIRD].path = "./Assets/gofas/pigeon-draft.xpm";
-	game->img[BACKGROUND1].path = "./Assets/gofas/background-1.xpm";
-	game->img[BACKGROUND2].path = "./Assets/gofas/background-2.xpm";
-	game->img[BACKGROUND3].path = "./Assets/gofas/sunset-background2.xpm";
-	game->img[OBSTACLE].path = "./Assets/gofas/building-regular.xpm";
-	game->img[OBSTACLE_END].path = "./Assets/gofas/building-regular.xpm";
-	game->img[GAMESTART].path = "./Assets/mini_open_door.xpm";
-	game->img[GAMEOVER].path = "./Assets/milos_wall_1.xpm";
-	game->img[ZERO].path = "./Assets/sigma_wall_1.xpm";
-	game->img[ONE].path = "./Assets/gofas/number1.xpm";
-	game->img[TWO].path = "./Assets/gofas/number2.xpm";
-	game->img[THREE].path = "./Assets/gofas/number3.xpm";
-	game->img[FOUR].path = "./Assets/gofas/number4.xpm";
-	game->img[FIVE].path = "./Assets/gofas/number5.xpm";
-	game->img[SIX].path = "./Assets/gofas/number6.xpm";
-	game->img[SEVEN].path = "./Assets/gofas/number7.xpm";
-	game->img[EIGHT].path = "./Assets/gofas/number8.xpm";
-	game->img[NINE].path = "./Assets/gofas/number9.xpm";
-}*/
-
 static void	set_asset_paths(t_game *game)
 {
-	game->img[BIRD].path = "./Assets/dogo.xpm";
-	game->img[BACKGROUND1].path = "./Assets/back3.xpm";
-	game->img[BACKGROUND2].path = "./Assets/back22.xpm";
-	game->img[BACKGROUND3].path = "./Assets/back.xpm";
-	game->img[OBSTACLE].path = "./Assets/tubo.xpm";
-	game->img[OBSTACLE_END].path = "./Assets/tubofim.xpm";
-	game->img[GAMESTART].path = "./Assets/mini_open_door.xpm";
-	game->img[GAMEOVER].path = "./Assets/milos_wall_1.xpm";
-	game->img[ZERO].path = "./Assets/sigma_wall_1.xpm";
-	game->img[ONE].path = "./Assets/gofas/number1.xpm";
-	game->img[TWO].path = "./Assets/gofas/number2.xpm";
-	game->img[THREE].path = "./Assets/gofas/number3.xpm";
-	game->img[FOUR].path = "./Assets/gofas/number4.xpm";
-	game->img[FIVE].path = "./Assets/gofas/number5.xpm";
-	game->img[SIX].path = "./Assets/gofas/number6.xpm";
-	game->img[SEVEN].path = "./Assets/gofas/number7.xpm";
-	game->img[EIGHT].path = "./Assets/gofas/number8.xpm";
-	game->img[NINE].path = "./Assets/gofas/number9.xpm";
+	game->img[BIRDUP].path = "./Assets/pigeon_wings_up.xpm";
+	game->img[BIRDOWN].path = "./Assets/pigeon_wings_down.xpm";
+	game->img[BIRDEAD].path = "./Assets/pigeon_hurt.xpm";
+	game->img[BACKGROUND1].path = "./Assets/background-1.xpm";
+	game->img[BACKGROUND2].path = "./Assets/background-2.xpm";
+	game->img[BACKGROUND3].path = "./Assets/background3.xpm";
+	game->img[OBSTACLE].path = "./Assets/building-regular.xpm";
+	game->img[OBSTACLE_END].path = "./Assets/building-regular.xpm";
+	game->img[GAMESTART].path = "./Assets/game_start.xpm";
+	game->img[GAMEOVER].path = "./Assets/game_over.xpm";
+	game->img[ZERO].path = "./Assets/number0.xpm";
+	game->img[ONE].path = "./Assets/number1.xpm";
+	game->img[TWO].path = "./Assets/number2.xpm";
+	game->img[THREE].path = "./Assets/number3.xpm";
+	game->img[FOUR].path = "./Assets/number4.xpm";
+	game->img[FIVE].path = "./Assets/number5.xpm";
+	game->img[SIX].path = "./Assets/number6.xpm";
+	game->img[SEVEN].path = "./Assets/number7.xpm";
+	game->img[EIGHT].path = "./Assets/number8.xpm";
+	game->img[NINE].path = "./Assets/number9.xpm";
 }
 
 static void multiply_obstacles_pixel(t_game *game, int x, int y)

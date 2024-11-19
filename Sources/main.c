@@ -24,6 +24,7 @@ static void game_restart(t_game *game)
 	game->phys.game_speed = Y_RES * OBS_SPEED;
 	game->bird.alive = 1;
 	game->layout.menu_p = Y_RES;
+	game->bird.img = &game->img[BIRDUP];
 }
 
 static void game_start(t_game *game)

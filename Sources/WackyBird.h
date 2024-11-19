@@ -21,14 +21,15 @@
 # define Y_RES 800
 # define X_RES 600
 # define FRAME_RATE 60
-# define ASSET_NUMBER 18
+# define ASSET_NUMBER 20
 # define IMG_NUMBER 6
 # define BACKGROUND_LENGHT 10
+# define FLAP_FREQUENCY 0.1
 
 // UI
-# define B1_SPEED_RATIO 0.80
-# define B2_SPEED_RATIO 0.45
-# define B3_SPEED_RATIO 0.15
+# define B1_SPEED_RATIO 0.80 //64
+# define B2_SPEED_RATIO 0.45 //128
+# define B3_SPEED_RATIO 0.15 //256
 # define MENU_SPEED 1
 # define SCORE_SIZE 0.1
 # define SCORE_POS 0.03
@@ -37,11 +38,12 @@
 # define JUMP_STR 0.7
 # define ACCELERATION 2
 # define BIRD_X 0.3
+# define BIRD_HIT 0.3
 # define BIRD_SIZE 0.1
 # define BIRD_KNOCKBACK 0.1
 
 // OBSTACLES PROPERTIES
-# define OBS_SPEED 0.1
+# define OBS_SPEED 0.2
 # define OBS_GAP 0.3
 # define OBS_DISTANCE 0.4
 # define OBS_WIDTH 0.15
@@ -61,7 +63,9 @@ typedef enum assets
 	SEVEN,
 	EIGHT,
 	NINE,
-	BIRD,
+	BIRDUP,
+	BIRDOWN,
+	BIRDEAD,
 	OBSTACLE,
 	OBSTACLE_END,
 	GAMESTART,
@@ -99,7 +103,7 @@ typedef struct s_image
 
 typedef struct s_bird
 {
-	t_image		img;
+	t_image		*img;
 	int			alive;
 	int			h;
 	int			w;
@@ -107,6 +111,7 @@ typedef struct s_bird
 	float		y;
 	float		v;
 	float		knockback;
+	long		next_flap;
 }	t_bird;
 
 typedef struct s_obstacles

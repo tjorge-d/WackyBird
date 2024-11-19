@@ -6,6 +6,7 @@ static void stop_game(t_game *game)
 	game->bird.alive = 0;
 	game->running = 0;
 	game->layout.menu_p = Y_RES;
+	game->bird.img = &game->img[BIRDEAD];
 }
 
 static void	print_menu(t_game *game, int menu)
@@ -29,11 +30,11 @@ static void print_obstacles(t_game *game, int i)
 
 static void collision_check(t_game *game, int i)
 {
-	if (game->running && (!(game->obstacles[i].x + game->img[BOTTOM_OBS].w <= game->bird.x || \
+	if (game->running && (!(game->obstacles[i].x + game->img[BOTTOM_OBS].w <= game->bird.x + game->bird.h * BIRD_HIT || \
 	game->obstacles[i].x >= game->bird.x + game->bird.w || \
 	game->obstacles[i].bottom_y + game->img[BOTTOM_OBS].h <= game->bird.y || \
 	game->obstacles[i].bottom_y >= game->bird.y + game->bird.h) || \
-	!(game->obstacles[i].x + game->img[TOP_OBS].w <= game->bird.x || \
+	!(game->obstacles[i].x + game->img[TOP_OBS].w <= game->bird.x + game->bird.h * BIRD_HIT || \
 	game->obstacles[i].x >= game->bird.x + game->bird.w || \
 	game->obstacles[i].top_y + game->img[TOP_OBS].h <= game->bird.y || \
 	game->obstacles[i].top_y >= game->bird.y + game->bird.h)))
@@ -95,7 +96,17 @@ static void bird_movement(t_game *game)
 		game->bird.v = -game->phys.bird_jump;
 	if (!game->bird.alive)
 		game->bird.x -= (game->bird.knockback / (float)FRAME_RATE);
-	image_to_frame(game, game->bird.img, game->bird.x, game->bird.y);
+	image_to_frame(game, *(game->bird.img), game->bird.x, game->bird.y);
+	if ((game->time.tv_sec * 1000000 + game->time.tv_usec) > game->bird.next_flap && game->bird.alive)
+	{
+		if ((game->bird.img) == &game->img[BIRDOWN])
+			game->bird.img = &game->img[BIRDUP];
+		else
+			game->bird.img = &game->img[BIRDOWN];
+		game->bird.next_flap = game->time.tv_sec * 1000000 \
+		+ game->time.tv_usec + (1000000 / (FRAME_RATE * FLAP_FREQUENCY) );
+	}
+
 	if (game->bird.y >= Y_RES && game->running)
 		stop_game(game);
 }
