@@ -83,7 +83,7 @@ typedef enum assets
 
 typedef enum type
 {
-	FORE = 119,
+	FORE = 32,
 	ESC = 65307,
 }	t_type;
 

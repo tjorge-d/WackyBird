@@ -78,11 +78,11 @@ static void	set_asset_paths(t_game *game)
 	game->img[BIRDUP].path = "./Assets/pigeon_wings_up.xpm";
 	game->img[BIRDOWN].path = "./Assets/pigeon_wings_down.xpm";
 	game->img[BIRDEAD].path = "./Assets/pigeon_hurt.xpm";
-	game->img[BACKGROUND1].path = "./Assets/background-1.xpm";
-	game->img[BACKGROUND2].path = "./Assets/background-2.xpm";
+	game->img[BACKGROUND1].path = "./Assets/background1.xpm";
+	game->img[BACKGROUND2].path = "./Assets/background2.xpm";
 	game->img[BACKGROUND3].path = "./Assets/background3.xpm";
-	game->img[OBSTACLE].path = "./Assets/building-regular.xpm";
-	game->img[OBSTACLE_END].path = "./Assets/building-regular.xpm";
+	game->img[OBSTACLE].path = "./Assets/building_regular.xpm";
+	game->img[OBSTACLE_END].path = "./Assets/building_regular.xpm";
 	game->img[GAMESTART].path = "./Assets/game_start.xpm";
 	game->img[GAMEOVER].path = "./Assets/game_over.xpm";
 	game->img[ZERO].path = "./Assets/number0.xpm";
