@@ -31,7 +31,7 @@
 # define B2_SPEED_RATIO 0.45 //128
 # define B3_SPEED_RATIO 0.15 //256
 # define MENU_SPEED 1
-# define SCORE_SIZE 0.1
+# define SCORE_SIZE 0.05
 # define SCORE_POS 0.03
 
 // BIRD PROPERTIES

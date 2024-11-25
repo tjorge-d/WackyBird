@@ -107,7 +107,7 @@ static void bird_movement(t_game *game)
 		+ game->time.tv_usec + (1000000 / (FRAME_RATE * FLAP_FREQUENCY) );
 	}
 
-	if (game->bird.y >= Y_RES && game->running)
+	if ((game->bird.y >= Y_RES || game->bird.y + game->bird.h < 0 ) && game->running)
 		stop_game(game);
 }
 
