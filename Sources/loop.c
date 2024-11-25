@@ -48,7 +48,6 @@ static void score_check(t_game *game, int i)
 {
 	if (!game->obstacles[i].collected && game->obstacles[i].x + game->img[TOP_OBS].w / 2 < game->bird.x)
 	{
-		printf("GOOOOOL! %i\n", game->score);
 		game->score++;
 		game->obstacles[i].collected = 1;
 	}
@@ -132,7 +131,7 @@ static void obstacles(t_game *game)
 	}
 	if ((X_RES - closest_obs + game->img[BOTTOM_OBS].w > game->phys.obs_distance || !closest_obs) && game->running)
 		initialize_obstacle(game);
-	if (game->bird.alive)
+	if (game->bird.alive && game->running)
 		game->phys.game_speed += ((float)game->phys.obs_ac / (float)FRAME_RATE);
 }
 

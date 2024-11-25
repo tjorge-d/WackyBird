@@ -35,18 +35,18 @@
 # define SCORE_POS 0.03
 
 // BIRD PROPERTIES
-# define JUMP_STR 0.7
-# define ACCELERATION 2
+# define JUMP_STR 0.70
+# define ACCELERATION 2.2
 # define BIRD_X 0.3
 # define BIRD_HIT 0.3
 # define BIRD_SIZE 0.1
 # define BIRD_KNOCKBACK 0.1
 
 // OBSTACLES PROPERTIES
-# define OBS_SPEED 0.2
+# define OBS_SPEED 0.20
 # define OBS_GAP 0.3
-# define OBS_DISTANCE 0.4
-# define OBS_WIDTH 0.15
+# define OBS_DISTANCE 0.45
+# define OBS_WIDTH 0.20
 # define OBS_HEIGHT 10
 # define MAX_OBS 10
 
