@@ -80,7 +80,7 @@ static void	set_asset_paths(t_game *game)
 	game->img[BIRDEAD].path = "./Assets/pigeon_hurt.xpm";
 	game->img[BACKGROUND1].path = "./Assets/background1.xpm";
 	game->img[BACKGROUND2].path = "./Assets/mid_background.xpm";
-	game->img[BACKGROUND3].path = "./Assets/back_background.xpm";
+	game->img[BACKGROUND3].path = "./Assets/back_background_bonus.xpm";
 	game->img[OBSTACLE].path = "./Assets/building_mid_v3.xpm";
 	game->img[OBSTACLE_END].path = "./Assets/building_end_v3.xpm";
 	game->img[GAMESTART].path = "./Assets/game_start.xpm";
@@ -96,6 +96,30 @@ static void	set_asset_paths(t_game *game)
 	game->img[EIGHT].path = "./Assets/number8.xpm";
 	game->img[NINE].path = "./Assets/number9.xpm";
 }
+
+/*static void	set_asset_paths(t_game *game)
+{
+	game->img[BIRDUP].path = "./Assets/pigeon_wings_up.xpm";
+	game->img[BIRDOWN].path = "./Assets/pigeon_wings_down.xpm";
+	game->img[BIRDEAD].path = "./Assets/pigeon_hurt.xpm";
+	game->img[BACKGROUND1].path = "./Assets/background1.xpm";
+	game->img[BACKGROUND2].path = "./Assets/background2.xpm";
+	game->img[BACKGROUND3].path = "./Assets/back_background_bonus.xpm";
+	game->img[OBSTACLE].path = "./Assets/building_regular2.xpm";
+	game->img[OBSTACLE_END].path = "./Assets/building_end2.xpm";
+	game->img[GAMESTART].path = "./Assets/game_start.xpm";
+	game->img[GAMEOVER].path = "./Assets/game_over.xpm";
+	game->img[ZERO].path = "./Assets/number0.xpm";
+	game->img[ONE].path = "./Assets/number1.xpm";
+	game->img[TWO].path = "./Assets/number2.xpm";
+	game->img[THREE].path = "./Assets/number3.xpm";
+	game->img[FOUR].path = "./Assets/number4.xpm";
+	game->img[FIVE].path = "./Assets/number5.xpm";
+	game->img[SIX].path = "./Assets/number6.xpm";
+	game->img[SEVEN].path = "./Assets/number7.xpm";
+	game->img[EIGHT].path = "./Assets/number8.xpm";
+	game->img[NINE].path = "./Assets/number9.xpm";
+}*/
 
 static void multiply_obstacles_pixel(t_game *game, int x, int y)
 {
