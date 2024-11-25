@@ -81,8 +81,8 @@ static void	set_asset_paths(t_game *game)
 	game->img[BACKGROUND1].path = "./Assets/background1.xpm";
 	game->img[BACKGROUND2].path = "./Assets/mid_background.xpm";
 	game->img[BACKGROUND3].path = "./Assets/back_background_bonus.xpm";
-	game->img[OBSTACLE].path = "./Assets/building_mid_v3.xpm";
-	game->img[OBSTACLE_END].path = "./Assets/building_end_v3.xpm";
+	game->img[OBSTACLE].path = "./Assets/building_mid_v5.xpm";
+	game->img[OBSTACLE_END].path = "./Assets/building_end_v5.xpm";
 	game->img[GAMESTART].path = "./Assets/game_start.xpm";
 	game->img[GAMEOVER].path = "./Assets/game_over.xpm";
 	game->img[ZERO].path = "./Assets/number0.xpm";
